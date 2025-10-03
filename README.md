@@ -1,0 +1,1 @@
+StockTrack is a simple web application that helps small business owners manage their stock and sales. Users can add, update, and track products in one place.
