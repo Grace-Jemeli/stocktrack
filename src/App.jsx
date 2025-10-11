@@ -2,6 +2,8 @@ import { useState } from "react";
 import "./App.css";
 import Header from "./components/Header";
 import AddProductForm from "./components/AddProductForm";
+import DeleteButton from "./components/DeleteButton";
+import UpdateStockForm from "./components/UpdateStockForm";
 
 function App() {
   const [products, setProducts] = useState([
@@ -12,6 +14,18 @@ function App() {
 
   const handleAddProduct = (product) => {
     setProducts([...products, product]);
+  };
+
+  const handleDeleteProduct = (id) => {
+    const updatedProducts = products.filter((product) => product.id !== id);
+    setProducts(updatedProducts);
+  };
+
+  const handleUpdateProduct = (updatedProduct) => {
+    const newProducts = products.map((product) =>
+      product.id === updatedProduct.id ? updatedProduct : product
+    );
+    setProducts(newProducts);
   };
 
   return (
@@ -30,6 +44,16 @@ function App() {
             Status:{" "}
             <strong>{item.quantity > 0 ? "In Stock" : "Sold Out"}</strong>
           </p>
+
+          {/* Update Form */}
+          <UpdateStockForm
+            product={item}
+            onUpdate={handleUpdateProduct}
+          />
+
+          {/* Delete Button */}
+          <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
+          <hr />
         </div>
       ))}
 
