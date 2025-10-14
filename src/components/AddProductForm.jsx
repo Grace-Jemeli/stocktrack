@@ -1,64 +1,69 @@
-import React, { useState } from "react";
+// src/components/AddProductForm.jsx
+import { useState } from "react";
 
-function AddProductForm({ onAddProduct }) {
+export default function AddProductForm({ onAddProduct }) {
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [quantity, setQuantity] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    if (!name || !price || !quantity) {
-      alert("Please fill in all fields.");
-      return;
-    }
+    if (!name || !price || !quantity) return;
 
     const newProduct = {
       id: Date.now(),
       name,
-      price: parseFloat(price),
-      quantity: parseInt(quantity),
+      price: Number(price),
+      quantity: Number(quantity),
     };
 
     onAddProduct(newProduct);
-
-    // reset form
     setName("");
     setPrice("");
     setQuantity("");
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Add New Product</h3>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-gray-50 border border-gray-200 rounded-xl p-5 shadow-sm flex flex-col gap-4"
+    >
+      <h3 className="text-lg font-semibold text-gray-700 mb-2">
+        ➕ Add New Product
+      </h3>
 
-      <input
-        type="text"
-        placeholder="Product Name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <br />
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <input
+          type="text"
+          placeholder="Product Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <input
-        type="number"
-        placeholder="Price"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-      />
-      <br />
+        <input
+          type="number"
+          placeholder="Price"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
 
-      <input
-        type="number"
-        placeholder="Quantity"
-        value={quantity}
-        onChange={(e) => setQuantity(e.target.value)}
-      />
-      <br />
+        <input
+          type="number"
+          placeholder="Quantity"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
 
-      <button type="submit">Add Product</button>
+      <button
+        type="submit"
+        className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 rounded-lg transition"
+      >
+        Add Product
+      </button>
     </form>
   );
 }
-
-export default AddProductForm;
