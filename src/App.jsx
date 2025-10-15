@@ -110,8 +110,11 @@ function App() {
               </div>
 
               <div className="mt-3 sm:mt-0 flex flex-col sm:flex-row gap-2">
-                <UpdateStockForm product={item} onUpdate={handleUpdateProduct} />
-                <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
+                <div className="flex items-center gap-3 mt-2">
+                  <UpdateStockForm product={item} onUpdate={handleUpdateProduct} />
+                  <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
+                </div>
+
               </div>
             </div>
           ))}
