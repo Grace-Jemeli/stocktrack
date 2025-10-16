@@ -120,7 +120,13 @@ function App() {
         </div>
 
         <div className="mt-6">
-          <AddProductForm onAddProduct={handleAddProduct} />
+          <div className="bg-white shadow-md rounded-xl p-5 mt-8 border border-gray-100 max-w-md mx-auto">
+            <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
+              Add New Product
+            </h3>
+            <AddProductForm onAddProduct={handleAddProduct} />
+          </div>
+
         </div>
       </div>
     </div >
