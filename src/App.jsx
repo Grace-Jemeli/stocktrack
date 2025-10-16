@@ -8,6 +8,7 @@ function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // 🧩 Load products from API (with fallback)
   const fetchProductsFromAPI = async () => {
     try {
       const response = await fetch("https://dummyjson.com/products?limit=5");
@@ -22,47 +23,64 @@ function App() {
 
       setProducts((prev) => {
         const merged = [
-          ...prev.filter((p) => !apiProducts.some((a) => a.id === p.id)),
           ...apiProducts,
+          ...prev.filter((p) => !apiProducts.some((a) => a.id === p.id)),
         ];
         localStorage.setItem("stocktrack_products", JSON.stringify(merged));
         return merged;
       });
-
-      setLoading(false);
     } catch (error) {
-      console.error("Failed to fetch products:", error);
+      console.error("⚠️ Failed to fetch products:", error);
+
+      // fallback default data if API fails
+      const fallback = [
+        { id: 1, name: "Notebook", price: 150, quantity: 10 },
+        { id: 2, name: "Pen", price: 50, quantity: 0 },
+        { id: 3, name: "Desk Lamp", price: 800, quantity: 3 },
+      ];
+      setProducts(fallback);
+      localStorage.setItem("stocktrack_products", JSON.stringify(fallback));
+    } finally {
       setLoading(false);
     }
   };
 
+  // 🟢 Load from localStorage first
   useEffect(() => {
-    const savedProducts = localStorage.getItem("stocktrack_products");
-    if (savedProducts) {
-      setProducts(JSON.parse(savedProducts));
+    const saved = localStorage.getItem("stocktrack_products");
+    if (saved) {
+      setProducts(JSON.parse(saved));
       setLoading(false);
     } else {
       fetchProductsFromAPI();
     }
   }, []);
 
+  // 🟢 Save to localStorage whenever products change
   useEffect(() => {
     if (products.length > 0) {
       localStorage.setItem("stocktrack_products", JSON.stringify(products));
     }
   }, [products]);
 
+  // CRUD Handlers
   const handleAddProduct = (product) => setProducts([...products, product]);
   const handleDeleteProduct = (id) => setProducts(products.filter((p) => p.id !== id));
   const handleUpdateProduct = (updated) =>
     setProducts(products.map((p) => (p.id === updated.id ? updated : p)));
+
   const handleRefreshFromAPI = async () => {
     setLoading(true);
     await fetchProductsFromAPI();
   };
 
-  if (loading)
-    return <p className="text-center text-lg text-gray-500 mt-20">Loading products...</p>;
+  if (loading) {
+    return (
+      <p className="text-center text-lg text-gray-500 mt-20">
+        Loading products...
+      </p>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
@@ -98,8 +116,8 @@ function App() {
                 <h4 className="text-lg font-semibold text-gray-800">{item.name}</h4>
                 <span
                   className={`text-sm font-medium px-2 py-1 rounded-full ${item.quantity > 0
-                    ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
                     }`}
                 >
                   {item.quantity > 0 ? "In Stock" : "Sold Out"}
@@ -114,8 +132,6 @@ function App() {
                 <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
               </div>
             </div>
-
-
           ))}
         </div>
 
@@ -126,10 +142,9 @@ function App() {
             </h3>
             <AddProductForm onAddProduct={handleAddProduct} />
           </div>
-
         </div>
       </div>
-    </div >
+    </div>
   );
 }
 
