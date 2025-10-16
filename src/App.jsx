@@ -92,31 +92,30 @@ function App() {
           {products.map((item) => (
             <div
               key={item.id}
-              className="border border-gray-200 rounded-xl p-4 flex flex-col sm:flex-row sm:items-center sm:justify-between"
+              className="bg-white shadow-md rounded-xl p-4 mb-4 border border-gray-100 hover:shadow-lg transition duration-200"
             >
-              <div>
-                <h4 className="text-lg font-semibold">{item.name}</h4>
-                <p className="text-gray-600 text-sm">Price: ${item.price}</p>
-                <p className="text-gray-600 text-sm">Quantity: {item.quantity}</p>
-                <p className="text-sm mt-1">
-                  Status:{" "}
-                  <strong
-                    className={`${item.quantity > 0 ? "text-green-600" : "text-red-600"
-                      }`}
-                  >
-                    {item.quantity > 0 ? "In Stock" : "Sold Out"}
-                  </strong>
-                </p>
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="text-lg font-semibold text-gray-800">{item.name}</h4>
+                <span
+                  className={`text-sm font-medium px-2 py-1 rounded-full ${item.quantity > 0
+                    ? "bg-green-100 text-green-700"
+                    : "bg-red-100 text-red-700"
+                    }`}
+                >
+                  {item.quantity > 0 ? "In Stock" : "Sold Out"}
+                </span>
               </div>
 
-              <div className="mt-3 sm:mt-0 flex flex-col sm:flex-row gap-2">
-                <div className="flex items-center gap-3 mt-2">
-                  <UpdateStockForm product={item} onUpdate={handleUpdateProduct} />
-                  <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
-                </div>
+              <p className="text-gray-600">💰 Price: ${item.price}</p>
+              <p className="text-gray-600">📦 Quantity: {item.quantity}</p>
 
+              <div className="flex items-center gap-3 mt-3">
+                <UpdateStockForm product={item} onUpdate={handleUpdateProduct} />
+                <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
               </div>
             </div>
+
+
           ))}
         </div>
 
@@ -124,7 +123,7 @@ function App() {
           <AddProductForm onAddProduct={handleAddProduct} />
         </div>
       </div>
-    </div>
+    </div >
   );
 }
 
