@@ -110,12 +110,13 @@ function App() {
           {products.map((item) => (
             <div
               key={item.id}
-              className="bg-white shadow-md rounded-xl p-4 mb-4 border border-gray-100 hover:shadow-lg transition duration-200"
+              className="bg-white shadow-sm hover:shadow-lg transition-all duration-200 rounded-xl p-5 border border-gray-200"
             >
+
               <div className="flex justify-between items-center mb-2">
-                <h4 className="text-lg font-semibold text-gray-800">{item.name}</h4>
+                <h4 className="text-lg font-semibold text-gray-900">{item.name}</h4>
                 <span
-                  className={`text-sm font-medium px-2 py-1 rounded-full ${item.quantity > 0
+                  className={`text-xs font-semibold px-3 py-1 rounded-full ${item.quantity > 0
                       ? "bg-green-100 text-green-700"
                       : "bg-red-100 text-red-700"
                     }`}
@@ -124,8 +125,8 @@ function App() {
                 </span>
               </div>
 
-              <p className="text-gray-600">💰 Price: ${item.price}</p>
-              <p className="text-gray-600">📦 Quantity: {item.quantity}</p>
+              <p className="text-gray-700 mb-1">💰 <span className="font-medium">${item.price}</span></p>
+              <p className="text-gray-700">📦 Quantity: <span className="font-medium">{item.quantity}</span></p>
 
               <div className="flex items-center gap-3 mt-3">
                 <UpdateStockForm product={item} onUpdate={handleUpdateProduct} />
