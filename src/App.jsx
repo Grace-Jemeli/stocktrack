@@ -7,6 +7,7 @@ import UpdateStockForm from "./components/UpdateStockForm";
 function App() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState("");
 
   // 🧩 Load products from API (with fallback)
   const fetchProductsFromAPI = async () => {
@@ -74,6 +75,11 @@ function App() {
     await fetchProductsFromAPI();
   };
 
+  // 🧠 Step 3: Filter products based on search query
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   if (loading) {
     return (
       <p className="text-center text-lg text-gray-500 mt-20">
@@ -92,50 +98,68 @@ function App() {
           <p className="text-gray-600">Manage your stock easily in one place</p>
         </div>
 
-        <div className="flex justify-between items-center mb-6">
+        {/* Search + Refresh Section */}
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 gap-3">
           <h3 className="text-lg font-semibold text-gray-700">Products in Stock</h3>
-          <button
-            onClick={handleRefreshFromAPI}
-            className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition"
-          >
-            🔄 Refresh from API
-          </button>
+
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              onClick={handleRefreshFromAPI}
+              className="bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 rounded-lg transition"
+            >
+              🔄 Refresh
+            </button>
+          </div>
         </div>
 
-        {products.length === 0 && (
-          <p className="text-center text-gray-500 mb-4">No products available.</p>
+        {/* Display Products or Message */}
+        {filteredProducts.length === 0 ? (
+          <p className="text-center text-gray-500 mb-4">
+            No products found matching "{searchQuery}".
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {filteredProducts.map((item) => (
+              <div
+                key={item.id}
+                className="bg-white shadow-sm hover:shadow-lg transition-all duration-200 rounded-xl p-5 border border-gray-200"
+              >
+                <div className="flex justify-between items-center mb-2">
+                  <h4 className="text-lg font-semibold text-gray-900">{item.name}</h4>
+                  <span
+                    className={`text-xs font-semibold px-3 py-1 rounded-full ${item.quantity > 0
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                      }`}
+                  >
+                    {item.quantity > 0 ? "In Stock" : "Sold Out"}
+                  </span>
+                </div>
+
+                <p className="text-gray-700 mb-1">
+                  💰 <span className="font-medium">${item.price}</span>
+                </p>
+                <p className="text-gray-700">
+                  📦 Quantity: <span className="font-medium">{item.quantity}</span>
+                </p>
+
+                <div className="flex items-center gap-3 mt-3">
+                  <UpdateStockForm product={item} onUpdate={handleUpdateProduct} />
+                  <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
+                </div>
+              </div>
+            ))}
+          </div>
         )}
 
-        <div className="space-y-4">
-          {products.map((item) => (
-            <div
-              key={item.id}
-              className="bg-white shadow-sm hover:shadow-lg transition-all duration-200 rounded-xl p-5 border border-gray-200"
-            >
-
-              <div className="flex justify-between items-center mb-2">
-                <h4 className="text-lg font-semibold text-gray-900">{item.name}</h4>
-                <span
-                  className={`text-xs font-semibold px-3 py-1 rounded-full ${item.quantity > 0
-                      ? "bg-green-100 text-green-700"
-                      : "bg-red-100 text-red-700"
-                    }`}
-                >
-                  {item.quantity > 0 ? "In Stock" : "Sold Out"}
-                </span>
-              </div>
-
-              <p className="text-gray-700 mb-1">💰 <span className="font-medium">${item.price}</span></p>
-              <p className="text-gray-700">📦 Quantity: <span className="font-medium">{item.quantity}</span></p>
-
-              <div className="flex items-center gap-3 mt-3">
-                <UpdateStockForm product={item} onUpdate={handleUpdateProduct} />
-                <DeleteButton onDelete={() => handleDeleteProduct(item.id)} />
-              </div>
-            </div>
-          ))}
-        </div>
-
+        {/* Add Product Section */}
         <div className="mt-6">
           <div className="bg-white shadow-md rounded-xl p-5 mt-8 border border-gray-100 max-w-md mx-auto">
             <h3 className="text-xl font-semibold text-gray-800 mb-4 text-center">
