@@ -3,6 +3,8 @@ import Header from "./components/Header";
 import AddProductForm from "./components/AddProductForm";
 import DeleteButton from "./components/DeleteButton";
 import UpdateStockForm from "./components/UpdateStockForm";
+import Footer from "./components/Footer";
+
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -135,8 +137,8 @@ function App() {
                   <h4 className="text-lg font-semibold text-gray-900">{item.name}</h4>
                   <span
                     className={`text-xs font-semibold px-3 py-1 rounded-full ${item.quantity > 0
-                        ? "bg-green-100 text-green-700"
-                        : "bg-red-100 text-red-700"
+                      ? "bg-green-100 text-green-700"
+                      : "bg-red-100 text-red-700"
                       }`}
                   >
                     {item.quantity > 0 ? "In Stock" : "Sold Out"}
@@ -169,6 +171,7 @@ function App() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
