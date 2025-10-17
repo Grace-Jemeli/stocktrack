@@ -27,7 +27,7 @@ It allows users to add, update, and track products in one place.
 - **React (with Vite)** – frontend framework  
 - **Local Storage** – data persistence  
 - **DummyJSON API** – sample product data  
-- **CSS** – styling  
+- **CSS** – styling using Tailwind CSS 
 
 ---
 
